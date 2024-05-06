@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/06 17:24:32 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/06 23:08:56 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ typedef struct s_philo
 	t_fork			*left_fork;
 	t_fork			*right_fork;
 	struct s_data	*data;
+	pthread_mutex_t	is_done_eating;
+	pthread_mutex_t	is_eating;
 }	t_philo;
 
 //Structure to represent the data of the simulation, it includes:
@@ -60,16 +62,17 @@ typedef struct s_data
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
+	long			time_to_think;
 	int				num_times_to_eat;
-	int				start_time;
+	long			start_time;
 	int				end_simulation;
 	t_fork			*forks;
 	t_philo			*philos;
+	pthread_t		monitor;
 }	t_data;
 
 int		ft_return_error(char *str);
 int		ft_atol(char *nptr);
-int		ft_all_digit(char *str);
 int		ft_check_input(char **argv);
 int		ft_parse_input(t_data *table, char **argv);
 

@@ -3,21 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:58:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/06 17:11:47 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/07 00:24:26 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_return_error(char *str)
-{
-	printf("%s\n", str);
-	return (ERROR);
-}
-
+//Function to convert a string to a long
 int	ft_atol(char *nptr)
 {
 	long	result;
@@ -37,7 +32,7 @@ int	ft_atol(char *nptr)
 
 //Function to check if a string is a positive number
 //It returns an error if the string is not a positive number
-int	ft_all_digit(char *str)
+static int	ft_all_digit(char *str)
 {
 	int	i;
 
