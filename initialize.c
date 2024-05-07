@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/07 16:17:58 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/07 16:40:03 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,12 @@ void	ft_init_philos(t_data *table)
 		pthread_mutex_init(&table->philos[i].is_eating, NULL);
 		i++;
 	}
-	ft_assign_forks(&table->philos[i], table->forks);
+	ft_assign_forks(&table->philos[i], table->forks, table->num_philos);
 }
 
+//Function to initialize the forks in the table
+//It assigns to each philo a fork in their left and right hand
+//
 void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos)
 {
 	int	i;
@@ -49,13 +52,13 @@ void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos)
 	{
 		if (philo->id == 1)
 		{
-			philo->left_fork = &forks[philo->id];
+			philo->left_fork = &forks[philo[i].id];
 			philo->right_fork = &forks[num_philos];
 		}
 		else
 		{
-			philo->left_fork = &forks[philo->id];
-			philo->right_fork = &forks[philo->id - 1];
+			philo->left_fork = &forks[philo[i].id];
+			philo->right_fork = &forks[philo[i].id - 1];
 		}
 		i++;
 	}
