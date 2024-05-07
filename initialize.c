@@ -3,20 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/07 00:40:55 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/07 16:17:58 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 //Function to initialize the philosophers in the table
-//It assigns to each philosopher: the table, the id, a flag to know when is done eating,
-//the numeber of times it has eaten, the time of last eat, the mutex to know when is done eating,
+//It assigns to each philosopher: the table, the id, a flag to 
+//know when is done eating, the numeber of times it has eaten, 
+//the time of last eat, the mutex to know when is done eating,
 //the mutex to know when is eating, and assign forks.
-void ft_init_philos(t_data *table)
+void	ft_init_philos(t_data *table)
 {
 	int		i;
 	t_philo	*philo;
@@ -43,19 +44,20 @@ void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos)
 {
 	int	i;
 
-	i = 0
+	i = 1;
 	while (i < num_philos)
 	{
-		if (p)
-	}
-	if (i % 2 != 0)
-	{
-		philo->left_fork = &forks[i % philo->data->num_philos];
-		philo->right_fork = &forks[i - 1];
-	}
-	else
-	{
-		philo->left_fork = &forks[i - 1];
+		if (philo->id == 1)
+		{
+			philo->left_fork = &forks[philo->id];
+			philo->right_fork = &forks[num_philos];
+		}
+		else
+		{
+			philo->left_fork = &forks[philo->id];
+			philo->right_fork = &forks[philo->id - 1];
+		}
+		i++;
 	}
 }
 
