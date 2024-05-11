@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/07 16:40:03 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/11 11:17:19 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,25 @@ void	ft_init_philos(t_data *table)
 }
 
 //Function to initialize the forks in the table
-//It assigns to each philo a fork in their left and right hand
-//
+void	ft_init_fork(t_data *table)
+{
+	int	i;
+
+	table->forks = malloc(sizeof(t_fork) * table->num_philos);
+	if (!table->forks)
+		ft_clean_exit(table, RED"Error:malloc failure\n"RESET);
+	i = 0;
+	while (i < table->num_philos)
+	{
+		table->forks[i].id = i + 1;
+		pthread_mutex_init(&table->forks[i].fork, NULL);
+		i++;
+	}
+}
+
+
+//Function to assign the forks in the table to the philosophers
+//It assigns to specific philos a fork in their left and right hand
 void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos)
 {
 	int	i;
