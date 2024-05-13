@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:58:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/07 00:24:26 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/13 11:12:01 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,3 +65,18 @@ int	ft_check_input(char **argv)
 	}
 	return (SUCCESS);
 }
+
+//Function to get the start time of the simulation
+//it receives the time in milliseconds and check that 
+//the time transcurred since the start is less than the time
+//received and sleep 100ms when true
+int	ft_sleep(size_t time_milliseconds)
+{
+	size_t	start_time;
+
+	start_time = get_time();
+	while ((get_time() - start_time) < time_milliseconds)
+		usleep(100);
+	return (SUCCESS);
+}
+
