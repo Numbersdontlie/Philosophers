@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/11 11:17:19 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/13 16:51:35 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,24 +60,24 @@ void	ft_init_fork(t_data *table)
 
 //Function to assign the forks in the table to the philosophers
 //It assigns to specific philos a fork in their left and right hand
+//It assigns the first philosopher the right fork first and then the left fork
 void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos)
 {
 	int	i;
 
-	i = 1;
+	i = 0;
 	while (i < num_philos)
 	{
-		if (philo->id == 1)
+		if (philo[i].id == 1)
 		{
-			philo->left_fork = &forks[philo[i].id];
-			philo->right_fork = &forks[num_philos];
+			philo[i].left_fork = &forks[num_philos];
+			philo[i].right_fork = &forks[philo[i].id];
 		}
 		else
 		{
-			philo->left_fork = &forks[philo[i].id];
-			philo->right_fork = &forks[philo[i].id - 1];
+			philo[i].left_fork = &forks[philo[i].id - 1];
+			philo[i].right_fork = &forks[philo[i].id];
 		}
 		i++;
 	}
 }
-
