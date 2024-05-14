@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/13 16:51:35 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/14 14:55:23 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,14 @@ void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos)
 		}
 		i++;
 	}
+}
+
+//Function to get the current time in milliseconds
+//It uses gettimeofday to get the time in seconds and microseconds
+long	ft_get_time(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }

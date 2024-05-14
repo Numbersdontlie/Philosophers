@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/06 23:08:56 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/14 15:06:14 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # define ERROR -1
 # define SUCCESS 0
 # define MAX_PHILOS 200
+# define TRUE 10
+# define FALSE 20
 
 //Structure to represent the fork with a mutex and an id
 typedef struct s_fork
@@ -69,11 +71,28 @@ typedef struct s_data
 	t_fork			*forks;
 	t_philo			*philos;
 	pthread_t		monitor;
+	pthread_mutex_t	print;
+	pthread_mutex_t	ready_to_go;
+	pthread_mutex_t	simulation_done;
 }	t_data;
 
 int		ft_return_error(char *str);
+void	ft_clean_exit(t_data *table, char *str);
+void	ft_free_memory(t_data *table);
+void	ft_init_philos(t_data *table);
+void	ft_init_fork(t_data *table);
+void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos);
+long	ft_get_time(void);
+void	ft_switch_mutex(pthread_mutex_t *mutex, int *value, int status);
+int		ft_check_mutex(pthread_mutex_t *mutex, int *value);
+int		ft_check_end(t_data *table);
+void	ft_get_last_eat(t_philo *philo);
+int		ft_check_die(t_philo *philo);
+void	*ft_supervise(void *ptr);
 int		ft_atol(char *nptr);
 int		ft_check_input(char **argv);
 int		ft_parse_input(t_data *table, char **argv);
+void	ft_put_msg(t_philo *philo, char *str);
+int		ft_sleep(size_t time_milliseconds);
 
 #endif

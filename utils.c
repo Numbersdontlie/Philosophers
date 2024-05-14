@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:58:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/13 11:12:01 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/14 14:56:23 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,17 @@ int	ft_sleep(size_t time_milliseconds)
 
 	start_time = get_time();
 	while ((get_time() - start_time) < time_milliseconds)
-		usleep(100);
+		usleep(400);
 	return (SUCCESS);
+}
+
+//Function to print a message
+void	ft_put_msg(t_philo *philo, char *str)
+{
+	pthread_mutex_lock(&philo->data->print);
+	if (ft_check_end(philo->data) == FALSE)
+		printf("%ld %d %s\n", ft_get_time()
+			- philo->data->start_time, philo->id, str);
+	pthread_mutex_unlock(&philo->data->print);
 }
 
