@@ -3,14 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/14 14:55:23 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/15 21:41:14 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+//Function to allocate memory for the philos, forks and mutexes
+void	ft_allocate_memory(t_data *table)
+{
+	table->philos = malloc(sizeof(t_philo) * table->num_philos);
+	if (!table->philos)
+		ft_clean_exit(table, RED"Error: Malloc failed philo\n"RESET);
+	table->forks = malloc(sizeof(t_fork) * table->num_philos);
+	if (!table->forks)
+		ft_clean_exit(table, RED"Error: Malloc failed fork\n"RESET);
+}
 
 //Function to initialize the philosophers in the table
 //It assigns to each philosopher: the table, the id, a flag to 
@@ -20,11 +31,7 @@
 void	ft_init_philos(t_data *table)
 {
 	int		i;
-	t_philo	*philo;
 
-	table->philos = malloc(sizeof(t_philo) * table->num_philos);
-	if (!table->philos)
-		ft_clean_exit(table, RED"Error: Malloc failed\n"RESET);
 	i = 0;
 	while (i < table->num_philos)
 	{
@@ -33,11 +40,12 @@ void	ft_init_philos(t_data *table)
 		table->philos[i].done_eating = 0;
 		table->philos[i].eat_count = 0;
 		table->philos[i].time_last_eat = 0;
+		table->philos[i].eating_at_the_moment = 0;
 		pthread_mutex_init(&table->philos[i].is_done_eating, NULL);
 		pthread_mutex_init(&table->philos[i].is_eating, NULL);
 		i++;
 	}
-	ft_assign_forks(&table->philos[i], table->forks, table->num_philos);
+	//ft_assign_forks(&table->philos[i], table->forks, table->num_philos);
 }
 
 //Function to initialize the forks in the table
@@ -45,9 +53,6 @@ void	ft_init_fork(t_data *table)
 {
 	int	i;
 
-	table->forks = malloc(sizeof(t_fork) * table->num_philos);
-	if (!table->forks)
-		ft_clean_exit(table, RED"Error:malloc failure\n"RESET);
 	i = 0;
 	while (i < table->num_philos)
 	{
@@ -56,7 +61,6 @@ void	ft_init_fork(t_data *table)
 		i++;
 	}
 }
-
 
 //Function to assign the forks in the table to the philosophers
 //It assigns to specific philos a fork in their left and right hand
@@ -82,12 +86,13 @@ void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos)
 	}
 }
 
-//Function to get the current time in milliseconds
-//It uses gettimeofday to get the time in seconds and microseconds
-long	ft_get_time(void)
+//Function to initialize the values of the table
+//It allocates memory for the philos and forks and 
+//Initialize the philos and forks and assign the forks to the philos
+void	ft_initialize(t_data *table)
 {
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+	ft_allocate_memory(table);
+	ft_init_philos(table);
+	ft_init_fork(table);
+	ft_assign_forks(table->philos, table->forks, table->num_philos);
 }

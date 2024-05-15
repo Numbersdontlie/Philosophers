@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 00:24:01 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/14 15:02:52 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/15 22:05:17 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,14 @@ void	ft_clean_exit(t_data *table, char *str)
 }
 
 //Function to free the allocated memory
-//It frees the forks, the philosophers and the table holding 
-//the data of simulation
+//It frees the forks, the philosophers and the table holding the data of simulation
 void	ft_free_memory(t_data *table)
 {
+	if (table->monitor)
+	{
+		free(table->monitor);
+		table->monitor = NULL;
+	}
 	if (table->forks)
 	{
 		free(table->forks);
@@ -45,4 +49,24 @@ void	ft_free_memory(t_data *table)
 		table->philos = NULL;
 	}
 	free(table);
+}
+
+//Function to destroy the mutexes
+//It destroys the mutex of the forks and the philosophers
+//It also destroys the mutex of the print, the ready_to_go and the simulation_done
+void	ft_destroy_mutex(t_data *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->num_philos)
+	{
+		pthread_mutex_destroy(&table->forks[i].fork);
+		pthread_mutex_destroy(&table->philos[i].is_done_eating);
+		pthread_mutex_destroy(&table->philos[i].is_eating);
+		i++;
+	}
+	pthread_mutex_destroy(&table->print);
+	pthread_mutex_destroy(&table->ready_to_go);
+	pthread_mutex_destroy(&table->simulation_done);
 }

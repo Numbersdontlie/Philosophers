@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/14 15:06:14 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/15 21:40:05 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_philo
 	int				eat_count;
 	int				time_last_eat;
 	int				done_eating;
+	int				eating_at_the_moment;
 	pthread_t		thread_id;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
@@ -94,5 +95,6 @@ int		ft_check_input(char **argv);
 int		ft_parse_input(t_data *table, char **argv);
 void	ft_put_msg(t_philo *philo, char *str);
 int		ft_sleep(size_t time_milliseconds);
+void	ft_initialize(t_data *table);
 
 #endif
