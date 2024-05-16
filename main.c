@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:46:00 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/06 23:09:18 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/16 11:51:37 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv)
 		if ()
 		
 		//ft_parse_input(&table, argv); ToDo
-		//ft_data_init(&table); ToDo
+		ft_initialize(&table, argc, argv);
 		//ft_feed_philos(&table); ToDo
 		//ft_clean(&table); ToDo
 	}

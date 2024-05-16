@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/15 21:40:05 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/16 11:50:57 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ typedef struct s_data
 	long			time_to_think;
 	int				num_times_to_eat;
 	long			start_time;
+	int				all_done_eating;
 	int				end_simulation;
 	t_fork			*forks;
 	t_philo			*philos;
@@ -95,6 +96,6 @@ int		ft_check_input(char **argv);
 int		ft_parse_input(t_data *table, char **argv);
 void	ft_put_msg(t_philo *philo, char *str);
 int		ft_sleep(size_t time_milliseconds);
-void	ft_initialize(t_data *table);
+void	ft_initialize(t_data *table, int argc, char **argv);
 
 #endif
