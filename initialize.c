@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/16 12:12:19 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/17 16:12:52 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ void	ft_allocate_memory(t_data *table)
 	table->forks = malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
 		ft_return_error(RED"Error: Malloc failed fork\n"RESET);
+	table->philos->thread_id = malloc(sizeof(pthread_t) * table->num_philos);
+	if (!table->philos->thread_id)
+		ft_return_error(RED"Error: Malloc failed thread\n"RESET);
 }
 
 //Function to initialize the philosophers in the table
@@ -45,30 +48,38 @@ void	ft_init_philos(t_data *table)
 		pthread_mutex_init(&table->philos[i].is_eating, NULL);
 		i++;
 	}
-	//ft_assign_forks(&table->philos[i], table->forks, table->num_philos);
 }
 
 //Function to initialize the forks in the table
-void	ft_init_fork(t_data *table)
+void	ft_init_threads(t_data *table)
 {
 	int	i;
 
 	i = 0;
+	table->start_time = ft_get_time();
 	while (i < table->num_philos)
 	{
-		table->forks[i].id = i + 1;
-		pthread_mutex_init(&table->forks[i].fork, NULL);
+		if (pthread_create(&table->philos[i], NULL, ft_routine, &table->philos[i]) != SUCCESS)
+			ft_return_error(RED"Error: Creating thread\n"RESET);
 		i++;
 	}
+	if (pt)
 }
 
-//Function to assign the forks in the table to the philosophers
+//Function to initialize and assign the forks in the table to the philosophers
 //It assigns to specific philos a fork in their left and right hand
 //It assigns the first philosopher the right fork first and then the left fork
 void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos)
 {
 	int	i;
 
+	i = 0;
+	while (i < num_philos)
+	{
+		forks[i].id = i + 1;
+		pthread_mutex_init(&forks[i].fork, NULL);
+		i++;
+	}
 	i = 0;
 	while (i < num_philos)
 	{
