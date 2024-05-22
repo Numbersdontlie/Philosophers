@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/21 12:14:10 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/22 23:18:19 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,15 @@ typedef struct s_philo
 {
 	int				id;
 	int				eat_count;
-	int				time_last_eat;
 	int				done_eating;
 	int				eating_at_the_moment;
+	long			time_last_eat;
 	pthread_t		thread_id;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
 	struct s_data	*data;
 	pthread_mutex_t	is_done_eating;
-	pthread_mutex_t	is_eating;
+	pthread_mutex_t	philo_status;
 }	t_philo;
 
 //Structure to represent the data of the simulation, it includes:
@@ -62,17 +62,17 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int				num_philos;
+	int				num_times_to_eat;
+	int				all_done_eating;
+	int				all_ready_to_start;
+	int				end_simulation;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
-	long			time_to_think;
-	int				num_times_to_eat;
 	long			start_time;
-	int				all_done_eating;
-	int				end_simulation;
 	t_fork			*forks;
 	t_philo			*philos;
-	pthread_t		monitor;
+	pthread_t		supervisor;
 	pthread_mutex_t	print;
 	pthread_mutex_t	ready_to_go;
 	pthread_mutex_t	simulation_done;
@@ -97,5 +97,8 @@ int		ft_parse_input(t_data *table, char **argv);
 void	ft_put_msg(t_philo *philo, char *str);
 int		ft_sleep(size_t time_milliseconds);
 void	ft_initialize(t_data *table, int argc, char **argv);
+void	ft_philo_eat(t_philo *philo);
+void	ft_take_fork(t_philo *philo);
+void	ft_single_philo(t_data *table);
 
 #endif

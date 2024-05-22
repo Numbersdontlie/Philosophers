@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:58:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/14 14:56:23 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/22 22:17:09 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,20 @@ int	ft_sleep(size_t time_milliseconds)
 {
 	size_t	start_time;
 
-	start_time = get_time();
-	while ((get_time() - start_time) < time_milliseconds)
+	start_time = ft_get_time();
+	while ((ft_get_time() - start_time) < time_milliseconds)
 		usleep(400);
 	return (SUCCESS);
+}
+
+//Function to get the current time in milliseconds
+//It uses gettimeofday to get the time in seconds and microseconds
+long	ft_get_time(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
 //Function to print a message
@@ -89,4 +99,3 @@ void	ft_put_msg(t_philo *philo, char *str)
 			- philo->data->start_time, philo->id, str);
 	pthread_mutex_unlock(&philo->data->print);
 }
-

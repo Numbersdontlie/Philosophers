@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/17 16:12:52 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/22 21:13:08 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	ft_allocate_memory(t_data *table)
 	table->forks = malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
 		ft_return_error(RED"Error: Malloc failed fork\n"RESET);
-	table->philos->thread_id = malloc(sizeof(pthread_t) * table->num_philos);
+	table->philos->supervisor = malloc(sizeof(pthread_t) * table->num_philos);
 	if (!table->philos->thread_id)
-		ft_return_error(RED"Error: Malloc failed thread\n"RESET);
+		ft_return_error(RED"Error: Malloc failed supervisor\n"RESET);
 }
 
 //Function to initialize the philosophers in the table
@@ -33,43 +33,26 @@ void	ft_allocate_memory(t_data *table)
 //the mutex to know when is eating, and assign forks.
 void	ft_init_philos(t_data *table)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (i < table->num_philos)
 	{
 		table->philos[i].data = table;
 		table->philos[i].id = i + 1;
-		table->philos[i].done_eating = 0;
 		table->philos[i].eat_count = 0;
 		table->philos[i].time_last_eat = 0;
 		table->philos[i].eating_at_the_moment = 0;
-		pthread_mutex_init(&table->philos[i].is_done_eating, NULL);
+		//pthread_mutex_init(&table->philos[i].is_done_eating, NULL);
 		pthread_mutex_init(&table->philos[i].is_eating, NULL);
 		i++;
 	}
 }
 
-//Function to initialize the forks in the table
-void	ft_init_threads(t_data *table)
-{
-	int	i;
-
-	i = 0;
-	table->start_time = ft_get_time();
-	while (i < table->num_philos)
-	{
-		if (pthread_create(&table->philos[i], NULL, ft_routine, &table->philos[i]) != SUCCESS)
-			ft_return_error(RED"Error: Creating thread\n"RESET);
-		i++;
-	}
-	if (pt)
-}
-
 //Function to initialize and assign the forks in the table to the philosophers
 //It assigns to specific philos a fork in their left and right hand
-//It assigns the first philosopher the right fork first and then the left fork
-void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos)
+//It assigns the first philosopher the left fork first and then the right fork
+void	ft_init_forks(t_philo *philo, t_fork *forks, int num_philos)
 {
 	int	i;
 
@@ -85,13 +68,13 @@ void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos)
 	{
 		if (philo[i].id == 1)
 		{
-			philo[i].left_fork = &forks[num_philos];
-			philo[i].right_fork = &forks[philo[i].id];
+			philo[i].left_fork = &forks[i];
+			philo[i].right_fork = &forks[num_philos - 1];
 		}
 		else
 		{
-			philo[i].left_fork = &forks[philo[i].id - 1];
-			philo[i].right_fork = &forks[philo[i].id];
+			philo[i].left_fork = &forks[i];
+			philo[i].right_fork = &forks[i - 1];
 		}
 		i++;
 	}
@@ -128,11 +111,11 @@ int	ft_parse_input(t_data *table, char **argv)
 //Initialize the philos and forks and assign the forks to the philos
 int	ft_initialize(t_data *table, int argc, char **argv)
 {
-	ft_allocate_memory(table);
 	if (ft_parse_input(table, argv) == ERROR)
 		ft_return_error(RED"Error: Parsing input\n"RESET);
-	ft_init_philos(table);
+	ft_allocate_memory(table);
 	ft_init_fork(table);
-	ft_assign_forks(table->philos, table->forks, table->num_philos);
+	ft_init_philos(table);
+	//ft_assign_forks(table->philos, table->forks, table->num_philos);
 	return (SUCCESS);
 }
