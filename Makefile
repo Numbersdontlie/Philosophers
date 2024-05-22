@@ -4,7 +4,7 @@ RESET=\033[0m
 
 NAME = philo
 
-SRCS = error_handling.c initialize.c main.c mutex_handling.c parsing.c supervisor.c utils.c 
+SRCS = error_handling.c initialize.c main.c mutex_handling.c parsing.c supervisor.c utils.c dinner.c simulation.c
 
 OBJS = ${SRCS:.c=.o}
 
