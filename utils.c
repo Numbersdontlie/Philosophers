@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:58:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/22 22:17:09 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/23 13:00:19 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,15 @@ static int	ft_all_digit(char *str)
 
 	i = 0;
 	if (str[0] == '0')
-		return (ft_return_error(RED"ERROR: Invalid number"RESET));
+		return (ft_return_error("ERROR: Invalid number"));
 	while (str[i])
 	{
 		if (str[i] == '-' || (str[i] < '0' || str[i] > '9'))
-			return (ft_return_error(RED"Insert a positive number"RESET));
+			return (ft_return_error("Insert a positive number"));
 		i++;
 	}
 	if (i > 10)
-		return (ft_return_error(RED"ERROR: Number out of range"RESET));
+		return (ft_return_error("ERROR: Number out of range"));
 	return (SUCCESS);
 }
 

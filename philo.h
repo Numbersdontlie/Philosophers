@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/22 23:18:19 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/23 13:04:58 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,10 @@ typedef struct s_data
 }	t_data;
 
 int		ft_return_error(char *str);
-void	ft_clean_exit(t_data *table, char *str);
-void	ft_free_memory(t_data *table);
+int		ft_clean_exit(t_data *table, char *str);
+//void	ft_free_memory(t_data *table);
 void	ft_init_philos(t_data *table);
-void	ft_init_fork(t_data *table);
+void	ft_init_forks(t_philo *philo, t_fork *forks, int num_philos);
 void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos);
 long	ft_get_time(void);
 void	ft_switch_mutex(pthread_mutex_t *mutex, int *value, int status);
@@ -96,9 +96,13 @@ int		ft_check_input(char **argv);
 int		ft_parse_input(t_data *table, char **argv);
 void	ft_put_msg(t_philo *philo, char *str);
 int		ft_sleep(size_t time_milliseconds);
-void	ft_initialize(t_data *table, int argc, char **argv);
+int		ft_initialize(t_data *table, char **argv);
 void	ft_philo_eat(t_philo *philo);
 void	ft_take_fork(t_philo *philo);
-void	ft_single_philo(t_data *table);
+void	*ft_single_philo(void *ptr);
+void	ft_put_meals(t_data *table);
+int		ft_start_simulation(t_data *table);
+void	ft_destroy_mutex(t_data *table);
+void	*ft_run_simulation(void *ptr);
 
 #endif

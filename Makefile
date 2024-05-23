@@ -4,13 +4,14 @@ RESET=\033[0m
 
 NAME = philo
 
-SRCS = error_handling.c initialize.c main.c mutex_handling.c parsing.c supervisor.c utils.c dinner.c simulation.c
+SRCS = dinner.c error_handling.c initialize.c main.c mutex_handle.c \
+		 simulation.c supervisor.c utils.c
 
 OBJS = ${SRCS:.c=.o}
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
 
 LIB = philo.h
 

@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:09:56 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/14 14:38:13 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/23 12:18:30 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	ft_check_end(t_data *table)
 //Function to get the last time a philosopher ate
 void	ft_get_last_eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->is_eating);
+	pthread_mutex_lock(&philo->philo_status);
 	philo->time_last_eat = ft_get_time();
-	pthread_mutex_unlock(&philo->is_eating);
+	pthread_mutex_unlock(&philo->philo_status);
 }

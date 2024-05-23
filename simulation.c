@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 11:27:03 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/22 23:20:42 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/23 12:55:37 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_start_simulation(t_data *table)
 	i = 0;
 	if (table->num_philos == 1)
 	{
-		if (pthread_create(&table->philos[0].thread_id, NULL, ft_single_philo, &table->philos[0]))
+		if (pthread_create(&table->philos[0].thread_id, NULL, &ft_single_philo, &table->philos[0]))
 			return (ft_return_error("Error creating thread"));
 	}
 	else
@@ -51,7 +51,7 @@ int	ft_start_simulation(t_data *table)
 
 //Function to start to run the simulation
 //It creates the threads for the supervisor of simulation
-void	ft_run_simulation(void *ptr)
+void	*ft_run_simulation(void *ptr)
 {
 	t_philo	*philo;
 	philo = (t_philo *)ptr;
@@ -63,10 +63,10 @@ void	ft_run_simulation(void *ptr)
 	{
 		ft_philo_eat(philo);
 		if (ft_check_mutex(&philo->is_done_eating, &philo->done_eating) == TRUE)
-			return (NULL);
+			return (SUCCESS);
 		if (ft_check_end(philo->data) == FALSE)
 			ft_sleep(philo->data->time_to_sleep);
-		ft_philo_think(philo);
+		ft_put_msg(philo, "is thinking");
 	}
-	return (NULL);
+	return (SUCCESS);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   supervisor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:23:31 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/22 22:59:03 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/23 12:56:39 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	*ft_supervise(void *ptr)
 			if (ft_check_die(&table->philos[i]) == TRUE)
 			{
 				ft_switch_mutex(&table->simulation_done, &table->end_simulation, TRUE);
-				ft_put_message(&table->philos[i], "died");
+				ft_put_msg(&table->philos[i], "died");
 				table->end_simulation = TRUE;
 				return (NULL);
 			}

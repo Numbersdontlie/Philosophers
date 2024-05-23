@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/22 21:13:08 by luifer           ###   ########.fr       */
+/*   Updated: 2024/05/23 13:03:26 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ void	ft_allocate_memory(t_data *table)
 {
 	table->philos = malloc(sizeof(t_philo) * table->num_philos);
 	if (!table->philos)
-		ft_return_error(RED"Error: Malloc failed philo\n"RESET);
+		ft_return_error("Error: Malloc failed philo\n");
 	table->forks = malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
-		ft_return_error(RED"Error: Malloc failed fork\n"RESET);
-	table->philos->supervisor = malloc(sizeof(pthread_t) * table->num_philos);
-	if (!table->philos->thread_id)
-		ft_return_error(RED"Error: Malloc failed supervisor\n"RESET);
+		ft_return_error("Error: Malloc failed fork\n");
+	//table->supervisor = malloc(sizeof(pthread_t) * table->num_philos);
+	//if (!table->philos->thread_id)
+	//	ft_return_error("Error: Malloc failed supervisor\n");
 }
 
 //Function to initialize the philosophers in the table
@@ -43,8 +43,8 @@ void	ft_init_philos(t_data *table)
 		table->philos[i].eat_count = 0;
 		table->philos[i].time_last_eat = 0;
 		table->philos[i].eating_at_the_moment = 0;
-		//pthread_mutex_init(&table->philos[i].is_done_eating, NULL);
-		pthread_mutex_init(&table->philos[i].is_eating, NULL);
+		pthread_mutex_init(&table->philos[i].is_done_eating, NULL);
+		pthread_mutex_init(&table->philos[i].philo_status, NULL);
 		i++;
 	}
 }
@@ -88,13 +88,13 @@ int	ft_parse_input(t_data *table, char **argv)
 {
 	table->num_philos = ft_atol(argv[1]);
 	if (table->num_philos > MAX_PHILOS || table->num_philos < 1)
-		return (ft_return_error(RED"ERROR: num of philos: 1 -> 200"RESET));
+		return (ft_return_error("ERROR: num of philos: 1 -> 200"));
 	table->time_to_die = ft_atol(argv[2]);
 	table->time_to_eat = ft_atol(argv[3]);
 	table->time_to_sleep = ft_atol(argv[4]);
 	if (table->time_to_die < 60 || table->time_to_eat < 60
 		|| table->time_to_sleep < 60)
-		return (ft_return_error(RED"ERROR: time in ms, min 60"RESET));
+		return (ft_return_error("ERROR: time in ms, min 60"));
 	if (argv[5])
 		table->num_times_to_eat = ft_atol(argv[5]);
 	else
@@ -109,12 +109,12 @@ int	ft_parse_input(t_data *table, char **argv)
 //Function to initialize the values of the table
 //It allocates memory for the philos and forks and 
 //Initialize the philos and forks and assign the forks to the philos
-int	ft_initialize(t_data *table, int argc, char **argv)
+int	ft_initialize(t_data *table, char **argv)
 {
 	if (ft_parse_input(table, argv) == ERROR)
-		ft_return_error(RED"Error: Parsing input\n"RESET);
+		ft_return_error("Error: Parsing input\n");
 	ft_allocate_memory(table);
-	ft_init_fork(table);
+	ft_init_forks(table->philos, table->forks, table->num_philos);
 	ft_init_philos(table);
 	//ft_assign_forks(table->philos, table->forks, table->num_philos);
 	return (SUCCESS);
