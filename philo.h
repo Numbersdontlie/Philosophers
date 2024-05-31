@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/23 13:04:58 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/31 18:03:57 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 # include <sys/time.h>
 # include <limits.h>
 
-# define RED	"\033[0;31m";
-# define GREEN	"\033[0;32m";
-# define YELLOW	"\033[0;33m";
-# define RESET	"\033[0m";
+# define RED	"\033[0;31m"
+# define GREEN	"\033[0;32m"
+# define YELLOW	"\033[0;33m"
+# define RESET	"\033[0m"
 # define ERROR -1
 # define SUCCESS 0
 # define MAX_PHILOS 200
@@ -46,7 +46,7 @@ typedef struct s_philo
 	int				id;
 	int				eat_count;
 	int				done_eating;
-	int				eating_at_the_moment;
+	//int				eating_at_the_moment;
 	long			time_last_eat;
 	pthread_t		thread_id;
 	t_fork			*left_fork;
@@ -63,12 +63,13 @@ typedef struct s_data
 {
 	int				num_philos;
 	int				num_times_to_eat;
-	int				all_done_eating;
+	//int				all_done_eating;
 	int				all_ready_to_start;
 	int				end_simulation;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
+	long			time_to_think;
 	long			start_time;
 	t_fork			*forks;
 	t_philo			*philos;
@@ -82,8 +83,8 @@ int		ft_return_error(char *str);
 int		ft_clean_exit(t_data *table, char *str);
 //void	ft_free_memory(t_data *table);
 void	ft_init_philos(t_data *table);
-void	ft_init_forks(t_philo *philo, t_fork *forks, int num_philos);
-void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos);
+void	ft_init_forks(t_data *table);
+void	ft_assign_forks(t_philo *philo, t_fork *forks);
 long	ft_get_time(void);
 void	ft_switch_mutex(pthread_mutex_t *mutex, int *value, int status);
 int		ft_check_mutex(pthread_mutex_t *mutex, int *value);

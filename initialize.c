@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/23 13:03:26 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/31 18:04:47 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@ void	ft_allocate_memory(t_data *table)
 	table->forks = malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
 		ft_return_error("Error: Malloc failed fork\n");
-	//table->supervisor = malloc(sizeof(pthread_t) * table->num_philos);
-	//if (!table->philos->thread_id)
-	//	ft_return_error("Error: Malloc failed supervisor\n");
 }
 
 //Function to initialize the philosophers in the table
@@ -41,10 +38,11 @@ void	ft_init_philos(t_data *table)
 		table->philos[i].data = table;
 		table->philos[i].id = i + 1;
 		table->philos[i].eat_count = 0;
-		table->philos[i].time_last_eat = 0;
-		table->philos[i].eating_at_the_moment = 0;
+		table->philos[i].done_eating = FALSE;
+		table->philos[i].time_last_eat = ft_get_time();
 		pthread_mutex_init(&table->philos[i].is_done_eating, NULL);
 		pthread_mutex_init(&table->philos[i].philo_status, NULL);
+		ft_assign_forks(&table->philos[i], table->forks);
 		i++;
 	}
 }
@@ -52,31 +50,36 @@ void	ft_init_philos(t_data *table)
 //Function to initialize and assign the forks in the table to the philosophers
 //It assigns to specific philos a fork in their left and right hand
 //It assigns the first philosopher the left fork first and then the right fork
-void	ft_init_forks(t_philo *philo, t_fork *forks, int num_philos)
+void	ft_init_forks(t_data *table)
 {
 	int	i;
 
 	i = 0;
-	while (i < num_philos)
+	while (i < table->num_philos)
 	{
-		forks[i].id = i + 1;
-		pthread_mutex_init(&forks[i].fork, NULL);
+		pthread_mutex_init(&table->forks[i].fork, NULL);
+		table->forks[i].id = i;
 		i++;
 	}
-	i = 0;
-	while (i < num_philos)
+}
+
+//Function to assign the forks to the philosophers
+//It assigns the left fork to the philosopher with an odd id
+//It assigns the right fork to the philosopher with an even id
+void	ft_assign_forks(t_philo *philo, t_fork *forks)
+{
+	int	i;
+
+	i = philo->id;
+	if (i % 2 != 0)
 	{
-		if (philo[i].id == 1)
-		{
-			philo[i].left_fork = &forks[i];
-			philo[i].right_fork = &forks[num_philos - 1];
-		}
-		else
-		{
-			philo[i].left_fork = &forks[i];
-			philo[i].right_fork = &forks[i - 1];
-		}
-		i++;
+		philo->left_fork = &forks[i % philo->data->num_philos];
+		philo->right_fork = &forks[i - 1];
+	}
+	else
+	{
+		philo->left_fork = &forks[i - 1];
+		philo->right_fork = &forks[i % philo->data->num_philos];
 	}
 }
 
@@ -92,6 +95,7 @@ int	ft_parse_input(t_data *table, char **argv)
 	table->time_to_die = ft_atol(argv[2]);
 	table->time_to_eat = ft_atol(argv[3]);
 	table->time_to_sleep = ft_atol(argv[4]);
+	table->time_to_think = table->time_to_die - table->time_to_eat - table->time_to_sleep;
 	if (table->time_to_die < 60 || table->time_to_eat < 60
 		|| table->time_to_sleep < 60)
 		return (ft_return_error("ERROR: time in ms, min 60"));
@@ -100,12 +104,13 @@ int	ft_parse_input(t_data *table, char **argv)
 	else
 		table->num_times_to_eat = -1;
 	table->end_simulation = FALSE;
-	table->all_done_eating = FALSE;
+	table->all_ready_to_start = FALSE;
 	pthread_mutex_init(&table->print, NULL);
 	pthread_mutex_init(&table->simulation_done, NULL);
 	pthread_mutex_init(&table->ready_to_go, NULL);
 	return (SUCCESS);
 }
+
 //Function to initialize the values of the table
 //It allocates memory for the philos and forks and 
 //Initialize the philos and forks and assign the forks to the philos
@@ -114,8 +119,8 @@ int	ft_initialize(t_data *table, char **argv)
 	if (ft_parse_input(table, argv) == ERROR)
 		ft_return_error("Error: Parsing input\n");
 	ft_allocate_memory(table);
-	ft_init_forks(table->philos, table->forks, table->num_philos);
+	ft_init_forks(table);
 	ft_init_philos(table);
-	//ft_assign_forks(table->philos, table->forks, table->num_philos);
+	table->start_time = ft_get_time();
 	return (SUCCESS);
 }

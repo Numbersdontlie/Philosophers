@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 11:16:11 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/23 13:05:10 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/05/31 16:36:51 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,18 @@ void	ft_take_fork(t_philo *philo)
 //it sleep and then release the forks
 void	ft_philo_eat(t_philo *philo)
 {
-	ft_take_fork(philo);
-	pthread_mutex_lock(&philo->philo_status);
-	philo->eating_at_the_moment = TRUE;
-	ft_put_msg(philo, "is eating");
-	philo->eat_count++;
-	ft_sleep(philo->data->time_to_eat);
+	pthread_mutex_lock(&philo->right_fork->fork);
+	ft_put_msg(philo, "has taken a fork");
+	if (ft_check_end(philo->data) == TRUE)
+		return ;
+	pthread_mutex_lock(&philo->left_fork->fork);
+	ft_put_msg(philo, "has taken a fork");
 	ft_get_last_eat(philo);
-	philo->eating_at_the_moment = FALSE;
-	pthread_mutex_unlock(&philo->philo_status);
+	ft_put_msg(philo, "is eating");
+	ft_sleep(philo->data->time_to_eat);
 	pthread_mutex_unlock(&philo->right_fork->fork);
 	pthread_mutex_unlock(&philo->left_fork->fork);
-	ft_put_msg(philo, "is sleeping");
-	ft_sleep(philo->data->time_to_sleep);
+	philo->eat_count++;
 	if (philo->data->num_times_to_eat == philo->eat_count)
 		ft_switch_mutex(&philo->is_done_eating, &philo->done_eating, TRUE);
 }
@@ -60,15 +59,16 @@ void	ft_philo_eat(t_philo *philo)
 //with just one philosopher
 void	*ft_single_philo(void *ptr)
 {
-	t_data	*table;
+	t_philo	*philo;
 
-	table = ((t_philo *)ptr)->data;
-	table->start_time = ft_get_time();
-	ft_put_msg(&table->philos[0], "has taken a fork");
-	ft_sleep(table->time_to_die);
-	ft_put_msg(&table->philos[0], "died");
-	ft_clean_exit(table, NULL);
-	//ft_free_memory(table);
+	philo = (t_philo *)ptr;
+	while (ft_check_mutex(&philo->data->ready_to_go, &philo->data->all_ready_to_start) == FALSE)
+		usleep(180);
+	ft_get_last_eat(philo);
+	pthread_mutex_lock(&philo->right_fork->fork);
+	ft_put_msg(philo, "has taken a fork");
+	ft_sleep(philo->data->time_to_die);
+	pthread_mutex_unlock(&philo->right_fork->fork);
 	return (NULL);
 }
 
