@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 00:24:01 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/23 13:05:56 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/05 01:21:19 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,11 @@ void	ft_destroy_mutex(t_data *table)
 		pthread_mutex_destroy(&table->philos[i].philo_status);
 		i++;
 	}
-	pthread_mutex_destroy(&table->print);
-	pthread_mutex_destroy(&table->ready_to_go);
-	pthread_mutex_destroy(&table->simulation_done);
+	pthread_mutex_destroy(&table->print_mtx);
+	pthread_mutex_destroy(&table->all_ready_mtx);
+	pthread_mutex_destroy(&table->finished_mtx);
+	pthread_mutex_destroy(&table->start_mtx);
+	pthread_mutex_destroy(&table->simulation_done_mtx);
 }
 
 //Function to clean the memory and exit the program

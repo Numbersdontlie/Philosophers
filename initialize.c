@@ -3,14 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/05/23 13:03:26 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/05 00:00:48 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+//Function to parse the input received from the user
+//It checks if the time to die, eat and sleep are at least 60ms
+//It populates the data structure with the input
+//It also initializes the mutexes of the table
+int	ft_parse_input(t_data *table, int argc, char **argv)
+{
+	table->num_philos = ft_atol(argv[1]);
+	table->time_to_die = ft_atol(argv[2]);
+	table->time_to_eat = ft_atol(argv[3]);
+	table->time_to_sleep = ft_atol(argv[4]);
+	if (argc == 6)
+		table->num_times_to_eat = ft_atol(argv[5]);
+	else
+		table->num_times_to_eat = -1;
+	if (table->time_to_die < 60 || table->time_to_eat < 60
+		|| table->time_to_sleep < 60)
+		return (ft_return_error("ERROR: time in ms, min 60"));
+	return (SUCCESS);
+}
 
 //Function to allocate memory for the philos, forks and mutexes
 void	ft_allocate_memory(t_data *table)
@@ -21,9 +41,6 @@ void	ft_allocate_memory(t_data *table)
 	table->forks = malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
 		ft_return_error("Error: Malloc failed fork\n");
-	//table->supervisor = malloc(sizeof(pthread_t) * table->num_philos);
-	//if (!table->philos->thread_id)
-	//	ft_return_error("Error: Malloc failed supervisor\n");
 }
 
 //Function to initialize the philosophers in the table
@@ -42,80 +59,80 @@ void	ft_init_philos(t_data *table)
 		table->philos[i].id = i + 1;
 		table->philos[i].eat_count = 0;
 		table->philos[i].time_last_eat = 0;
-		table->philos[i].eating_at_the_moment = 0;
-		pthread_mutex_init(&table->philos[i].is_done_eating, NULL);
-		pthread_mutex_init(&table->philos[i].philo_status, NULL);
+		table->philos[i].done_eating = 0;
+		ft_initialize_mutex(&table->philos[i].philo_status, table);
+		i++;
+	}
+	ft_assign_forks(table->philos, table->forks, table->num_philos);
+}
+
+//Function to initialize the forks in the table
+//It assigns to each fork: the id and the mutex
+//It initializes the mutex of the fork
+void	ft_init_forks(t_data *table)
+{
+	t_fork	*forks;
+	int	i;
+
+	i = 0;
+	forks = table->forks;
+	while (i < table->num_philos)
+	{
+		forks[i].id = i + 1;
+		ft_initialize_mutex(&forks[i].fork, table);
 		i++;
 	}
 }
 
-//Function to initialize and assign the forks in the table to the philosophers
-//It assigns to specific philos a fork in their left and right hand
-//It assigns the first philosopher the left fork first and then the right fork
-void	ft_init_forks(t_philo *philo, t_fork *forks, int num_philos)
+//Function to initialize the values of the table
+//It allocates memory for the philos and forks and 
+//Initialize the philos and forks and assign the forks to the philos
+int	ft_initialize_data(t_data *table, int argc , char **argv)
+{
+	if (ft_parse_input(table, argc, argv) == ERROR)
+		ft_return_error("Error: Parsing input\n");
+	table->forks = NULL;
+	table->philos = NULL;
+	table->start_time = 0;
+	table->end_simulation = 0;
+	table->all_done_eating = 0;
+	table->all_philos_ready = 0;
+	table->ready_to_begin = 0;
+	table->counter = 0;
+	ft_initialize_mutex(&table->all_ready_mtx, table);
+	ft_initialize_mutex(&table->start_mtx, table);
+	ft_initialize_mutex(&table->end_mtx, table);
+	ft_initialize_mutex(&table->print_mtx, table);
+	ft_initialize_mutex(&table->simulation_done_mtx, table);
+	ft_allocate_memory(table);
+	ft_init_forks(table);
+	ft_init_philos(table);
+	return (SUCCESS);
+}
+
+//Function to assign the forks to the philosophers
+//odd philos start with left fork, even philos start with right fork
+void	ft_assign_forks(t_philo *philo, t_fork *fork, int num_philo)
 {
 	int	i;
 
 	i = 0;
-	while (i < num_philos)
+	while (i < num_philo)
 	{
-		forks[i].id = i + 1;
-		pthread_mutex_init(&forks[i].fork, NULL);
-		i++;
-	}
-	i = 0;
-	while (i < num_philos)
-	{
-		if (philo[i].id == 1)
+		if (philo[i].id % 2 != 0)
 		{
-			philo[i].left_fork = &forks[i];
-			philo[i].right_fork = &forks[num_philos - 1];
+			philo[i].first_fork = &fork[i];
+			if (i == 0)
+				philo[i].second_fork = &fork[num_philo - 1];
+			else
+				philo[i].second_fork = &fork[i - 1];
+			i++;
 		}
 		else
 		{
-			philo[i].left_fork = &forks[i];
-			philo[i].right_fork = &forks[i - 1];
+			philo[i].first_fork = &fork[i - 1];
+			philo[i].second_fork = &fork[i];
+			i++;
 		}
-		i++;
 	}
-}
-
-//Function to parse the input received from the user
-//It checks if the time to die, eat and sleep are at least 60ms
-//It populates the data structure with the input
-//It also initializes the mutexes of the table
-int	ft_parse_input(t_data *table, char **argv)
-{
-	table->num_philos = ft_atol(argv[1]);
-	if (table->num_philos > MAX_PHILOS || table->num_philos < 1)
-		return (ft_return_error("ERROR: num of philos: 1 -> 200"));
-	table->time_to_die = ft_atol(argv[2]);
-	table->time_to_eat = ft_atol(argv[3]);
-	table->time_to_sleep = ft_atol(argv[4]);
-	if (table->time_to_die < 60 || table->time_to_eat < 60
-		|| table->time_to_sleep < 60)
-		return (ft_return_error("ERROR: time in ms, min 60"));
-	if (argv[5])
-		table->num_times_to_eat = ft_atol(argv[5]);
-	else
-		table->num_times_to_eat = -1;
-	table->end_simulation = FALSE;
-	table->all_done_eating = FALSE;
-	pthread_mutex_init(&table->print, NULL);
-	pthread_mutex_init(&table->simulation_done, NULL);
-	pthread_mutex_init(&table->ready_to_go, NULL);
-	return (SUCCESS);
-}
-//Function to initialize the values of the table
-//It allocates memory for the philos and forks and 
-//Initialize the philos and forks and assign the forks to the philos
-int	ft_initialize(t_data *table, char **argv)
-{
-	if (ft_parse_input(table, argv) == ERROR)
-		ft_return_error("Error: Parsing input\n");
-	ft_allocate_memory(table);
-	ft_init_forks(table->philos, table->forks, table->num_philos);
-	ft_init_philos(table);
-	//ft_assign_forks(table->philos, table->forks, table->num_philos);
-	return (SUCCESS);
 }

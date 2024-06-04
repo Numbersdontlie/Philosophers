@@ -11,14 +11,14 @@ OBJS = ${SRCS:.c=.o}
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -g -pthread -fsanitize=thread
 
-LIB = philo.h
+#LIB = philo.h
 
 all: ${NAME}
 
 ${NAME}: $(OBJS)
-				$(CC) $(FLAGS) $(OBJS) -o $(NAME)
+				$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 				@echo "$(NAME): $(GREEN)$(OBJS) was created $(RESET)"
 
 clean:

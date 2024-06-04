@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mutex_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:09:56 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/05/23 12:18:30 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/05 00:27:11 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,21 @@ int	ft_check_mutex(pthread_mutex_t *mutex, int *value)
 	return (status);
 }
 
-//Function to check if the simulation has finished
-int	ft_check_end(t_data *table)
-{
-	int	i;
-
-	i = ft_check_mutex(&table->simulation_done, &table->end_simulation);
-	return (i);
-}
-
 //Function to get the last time a philosopher ate
 void	ft_get_last_eat(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->philo_status);
 	philo->time_last_eat = ft_get_time();
 	pthread_mutex_unlock(&philo->philo_status);
+}
+
+//Function to safely initialize a mutex
+//It checks if the mutex was initialized correctly
+//If not, it calls the function to clean the memory and exit the program
+//It increments the counter of mutexes in the table
+void	ft_initialize_mutex(pthread_mutex_t *mutex, t_data *table)
+{
+	if (pthread_mutex_init(mutex, NULL))
+		ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
+	table->counter++;
 }
