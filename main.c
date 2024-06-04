@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:46:00 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/05 00:01:50 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/05 01:28:05 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ int	main(int argc, char **argv)
 		if (ft_initialize_data(table, argc, argv) == ERROR)
 			return (ft_return_error(RED"Error: Initialization failed"RESET));
 		table->start_time = ft_get_time();
-		ft_start_simulation(table);
+		if (table->num_philos == 1)
+			ft_single_philo(table);
+		else
+			ft_start_simulation(table);
 		ft_put_meals(table);
 		ft_destroy_mutex(table);
 		free(table->philos);
