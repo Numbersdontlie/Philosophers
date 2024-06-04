@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/05 00:00:48 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/05 01:33:54 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int	ft_initialize_data(t_data *table, int argc , char **argv)
 	ft_initialize_mutex(&table->print_mtx, table);
 	ft_initialize_mutex(&table->simulation_done_mtx, table);
 	ft_allocate_memory(table);
+	ft_init_forks(table);
 	ft_init_forks(table);
 	ft_init_philos(table);
 	return (SUCCESS);

@@ -19,6 +19,7 @@ all: ${NAME}
 
 ${NAME}: $(OBJS)
 				$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+				$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 				@echo "$(NAME): $(GREEN)$(OBJS) was created $(RESET)"
 
 clean:

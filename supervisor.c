@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:23:31 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/05 00:42:24 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/05 01:34:39 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	ft_check_die(t_philo *philo)
 		pthread_mutex_unlock(&philo->philo_status);
 		return (TRUE);
 	}
+	pthread_mutex_unlock(&philo->philo_status);
 	pthread_mutex_unlock(&philo->philo_status);
 	return (FALSE);
 }

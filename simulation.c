@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 11:27:03 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/05 01:28:03 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/05 01:34:29 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	*ft_run_simulation(void *ptr)
 {
 	t_philo	*philo;
 
+
 	philo = (t_philo *)ptr;
 	while (ft_coordinate_start(philo->data) == SUCCESS)
 		;
@@ -66,5 +67,6 @@ void	*ft_run_simulation(void *ptr)
 		ft_sleep(philo->data->time_to_sleep);
 		ft_put_msg(philo, YELLOW"is thinking"RESET);
 	}
+	return (NULL);
 	return (NULL);
 }

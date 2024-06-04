@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/05 01:18:50 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/05 01:34:18 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@
 # include <sys/time.h>
 # include <limits.h>
 
+# define RED	"\033[0;31m"
+# define GREEN	"\033[0;32m"
+# define YELLOW	"\033[0;33m"
+# define RESET	"\033[0m"
 # define RED	"\033[0;31m"
 # define GREEN	"\033[0;32m"
 # define YELLOW	"\033[0;33m"
@@ -69,6 +73,7 @@ typedef struct s_data
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
+	long			time_to_think;
 	long			time_to_think;
 	long			start_time;
 	t_fork			*forks;
