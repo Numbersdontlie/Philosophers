@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 11:16:11 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/05 01:32:44 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/05 11:54:10 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	ft_philo_eat(t_philo *philo)
 	{
 		ft_put_msg(philo, GREEN"got all the meals"RESET);
 		pthread_mutex_lock(&philo->philo_status);
-		philo->done_eating = TRUE;
+		philo->done_eating = SUCCESS;
 		pthread_mutex_unlock(&philo->philo_status);
 		pthread_mutex_lock(&philo->data->finished_mtx);
 		philo->data->all_done_eating++;
@@ -45,34 +45,9 @@ void	ft_philo_eat(t_philo *philo)
 //Function to recreate the simulation
 //with just one philosopher, it will grab a fork and sleep
 //until it dies
-void	*ft_single_philo(t_philo *philo)
+void	ft_single_philo(t_philo *philo)
 {
 	ft_put_msg(philo, YELLOW"has taken a fork"RESET);
 	ft_sleep(philo->data->time_to_die);
 	ft_put_msg(philo, "died");
-}
-
-//Function to display the number of meals eaten by each philosopher
-//It locks the mutex to print the message
-//It iterates over the philosophers and print the number of meals eaten
-void	ft_put_meals(t_data *table)
-{
-	int	i;
-
-	i = 0;
-	pthread_mutex_lock(&table->print_mtx);
-	while (i < table->num_philos)
-	{
-		printf("Philo %d has eaten %d times\n", table->philos[i].id, table->philos[i].eat_count);
-		i++;
-	}
-	pthread_mutex_unlock(&table->print_mtx);
-}
-
-//Function to simulate a philosopher thinking
-void	ft_philo_thinking(t_philo *philo)
-{
-	ft_put_msg(philo, "is thinking");
-	if (ft_check_end(philo->data) == FALSE)
-		ft_sleep(philo->data->time_to_think);
 }

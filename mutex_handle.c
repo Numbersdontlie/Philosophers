@@ -6,41 +6,11 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:09:56 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/05 00:27:11 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/05 09:59:30 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-//Function to check the status of a mutex
-//It locks the mutex, reads the value and unlocks the mutex
-void	ft_switch_mutex(pthread_mutex_t *mutex, int *value, int status)
-{
-	pthread_mutex_lock(mutex);
-	*value = status;
-	pthread_mutex_unlock(mutex);
-}
-
-//Function to check the status of a mutex
-//It locks the mutex, reads the value and unlocks the mutex
-//It returns the value of the mutex
-int	ft_check_mutex(pthread_mutex_t *mutex, int *value)
-{
-	int	status;
-
-	pthread_mutex_lock(mutex);
-	status = *value;
-	pthread_mutex_unlock(mutex);
-	return (status);
-}
-
-//Function to get the last time a philosopher ate
-void	ft_get_last_eat(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->philo_status);
-	philo->time_last_eat = ft_get_time();
-	pthread_mutex_unlock(&philo->philo_status);
-}
 
 //Function to safely initialize a mutex
 //It checks if the mutex was initialized correctly
@@ -52,3 +22,25 @@ void	ft_initialize_mutex(pthread_mutex_t *mutex, t_data *table)
 		ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
 	table->counter++;
 }
+
+//Function to destroy the mutexes
+//It destroys the mutex of the forks and the philosophers
+//It also destroys the mutex of the print, the ready_to_go and the simulation_done
+void	ft_destroy_mutex(t_data *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->num_philos)
+	{
+		pthread_mutex_destroy(&table->forks[i].fork);
+		pthread_mutex_destroy(&table->philos[i].philo_status);
+		i++;
+	}
+	pthread_mutex_destroy(&table->print_mtx);
+	pthread_mutex_destroy(&table->all_ready_mtx);
+	pthread_mutex_destroy(&table->finished_mtx);
+	pthread_mutex_destroy(&table->start_mtx);
+	pthread_mutex_destroy(&table->simulation_done_mtx);
+}
+

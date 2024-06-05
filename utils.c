@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:58:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/04 22:38:07 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/05 15:40:16 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,10 @@ static int	ft_all_digit(char *str)
 
 //Function to check if all the arguments received from user 
 //are positive numbers
-int	ft_check_input(int argc, char **argv)
+int	ft_check_input(char **argv)
 {
 	int	i;
 
-	if (argc != 5 || argc !=6)
-		ft_return_error(RED"Error: Wrong number of arguments"RESET);
-	else if (argc > MAX_PHILOS || argc < 1)
-		ft_return_error(RED"Error: philosophers between 1 --> 200"RESET);
 	i = 1;
 	while (argv[i])
 	{
@@ -97,9 +93,9 @@ long	ft_get_time(void)
 //Function to print a message
 void	ft_put_msg(t_philo *philo, char *str)
 {
-	pthread_mutex_lock(&philo->data->print);
-	if (ft_check_end(philo->data) == FALSE)
+	pthread_mutex_lock(&philo->data->print_mtx);
+	if (ft_check_end(philo->data) == ERROR)
 		printf("%ld %d %s\n", ft_get_time()
 			- philo->data->start_time, philo->id, str);
-	pthread_mutex_unlock(&philo->data->print);
+	pthread_mutex_unlock(&philo->data->print_mtx);
 }

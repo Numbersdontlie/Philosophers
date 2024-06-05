@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/05 01:33:54 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/05 23:36:04 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ void	ft_allocate_memory(t_data *table)
 {
 	table->philos = malloc(sizeof(t_philo) * table->num_philos);
 	if (!table->philos)
-		ft_return_error("Error: Malloc failed philo\n");
+		ft_clean_exit(table, RED"Error: Malloc failed philo\n"RESET);
 	table->forks = malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
-		ft_return_error("Error: Malloc failed fork\n");
+		ft_clean_exit(table, RED"Error: Malloc failed fork\n"RESET);
 }
 
 //Function to initialize the philosophers in the table
@@ -93,7 +93,6 @@ int	ft_initialize_data(t_data *table, int argc , char **argv)
 		ft_return_error("Error: Parsing input\n");
 	table->forks = NULL;
 	table->philos = NULL;
-	table->start_time = 0;
 	table->end_simulation = 0;
 	table->all_done_eating = 0;
 	table->all_philos_ready = 0;
@@ -101,13 +100,13 @@ int	ft_initialize_data(t_data *table, int argc , char **argv)
 	table->counter = 0;
 	ft_initialize_mutex(&table->all_ready_mtx, table);
 	ft_initialize_mutex(&table->start_mtx, table);
-	ft_initialize_mutex(&table->end_mtx, table);
+	ft_initialize_mutex(&table->finished_mtx, table);
 	ft_initialize_mutex(&table->print_mtx, table);
 	ft_initialize_mutex(&table->simulation_done_mtx, table);
 	ft_allocate_memory(table);
 	ft_init_forks(table);
-	ft_init_forks(table);
 	ft_init_philos(table);
+	table->start_time = ft_get_time();
 	return (SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 00:24:01 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/05 01:28:01 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/05 09:59:26 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,48 +19,21 @@ int	ft_return_error(char *str)
 	return (ERROR);
 }
 
-//Function to destroy the mutexes
-//It destroys the mutex of the forks and the philosophers
-//It also destroys the mutex of the print, the ready_to_go and the simulation_done
-void	ft_destroy_mutex(t_data *table)
-{
-	int	i;
-
-	i = 0;
-	while (i < table->num_philos)
-	{
-		pthread_mutex_destroy(&table->forks[i].fork);
-		pthread_mutex_destroy(&table->philos[i].is_done_eating);
-		pthread_mutex_destroy(&table->philos[i].philo_status);
-		i++;
-	}
-	pthread_mutex_destroy(&table->print_mtx);
-	pthread_mutex_destroy(&table->all_ready_mtx);
-	pthread_mutex_destroy(&table->finished_mtx);
-	pthread_mutex_destroy(&table->start_mtx);
-	pthread_mutex_destroy(&table->simulation_done_mtx);
-}
-
 //Function to clean the memory and exit the program
 //It destroys the mutex and frees the memory of the table
 int	ft_clean_exit(t_data *table, char *str)
 {
 	printf("%s\n", str);
 	ft_destroy_mutex(table);
-	//ft_free_memory(table);
+	ft_free_memory(table);
 	return (ERROR);
 }
 
-/*
-//Function to free the allocated memory
-//It frees the forks, the philosophers and the table holding the data of simulation
+//Function to free the memory allocated 
+//for the forks and the philosophers
+//It also frees the memory of the table
 void	ft_free_memory(t_data *table)
 {
-	if (table->supervisor)
-	{
-		free(table->supervisor);
-		table->supervisor = NULL;
-	}
 	if (table->forks)
 	{
 		free(table->forks);
@@ -73,4 +46,3 @@ void	ft_free_memory(t_data *table)
 	}
 	free(table);
 }
-*/

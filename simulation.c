@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 11:27:03 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/05 01:34:29 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/05 18:29:08 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_start_simulation(t_data *table)
 		i++;
 	}
 	pthread_mutex_lock(&table->all_ready_mtx);
-	table->all_philos_ready = FALSE;
+	table->all_philos_ready = ERROR;
 	pthread_mutex_unlock(&table->all_ready_mtx);
 	ft_supervise(table);
 	i = 0;
@@ -60,7 +60,7 @@ void	*ft_run_simulation(void *ptr)
 		pthread_mutex_unlock(&philo->data->start_mtx);
 	}
 	
-	while (ft_check_end(philo->data) == FALSE && philo->done_eating == 0)
+	while (ft_check_end(philo->data) == ERROR && philo->done_eating == 0)
 	{
 		ft_philo_eat(philo);
 		ft_put_msg(philo, YELLOW"is sleeping"RESET);
