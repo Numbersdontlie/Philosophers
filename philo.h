@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/05 23:30:57 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/06 12:27:36 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ typedef struct s_data
 	int				all_philos_ready;
 	int				ready_to_begin;
 	int				end_simulation;
-	int				counter;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
@@ -97,7 +96,7 @@ void	ft_init_forks(t_data *table);
 int		ft_initialize_data(t_data *table, int argc, char **argv);
 void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos);
 //Mutex handle functions
-void	ft_initialize_mutex(pthread_mutex_t *mutex, t_data *table);
+void	ft_init_mtx_table(pthread_mutex_t *mtx, t_data *table);
 void	ft_destroy_mutex(t_data *table);
 //Simulation functions
 void	ft_start_simulation(t_data *table);

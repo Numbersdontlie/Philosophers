@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:23:31 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/05 18:24:19 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/06 13:22:18 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_check_die(t_philo *philo)
 	long	time;
 
 	pthread_mutex_lock(&philo->philo_status);
-	if (philo->done_eating == SUCCESS)
+	if (philo->done_eating == ERROR)
 	{
 		pthread_mutex_unlock(&philo->philo_status);
 		return (ERROR);
@@ -29,7 +29,7 @@ int	ft_check_die(t_philo *philo)
 	if (time >= philo->data->time_to_die)
 	{
 		pthread_mutex_lock(&philo->data->simulation_done_mtx);
-		philo->data->end_simulation = SUCCESS;
+		philo->data->end_simulation = ERROR;
 		pthread_mutex_unlock(&philo->data->simulation_done_mtx);
 		pthread_mutex_lock(&philo->data->print_mtx);
 		printf("%ld %d %s\n", ft_get_time() - philo->data->start_time, philo->id, "died");
@@ -37,7 +37,6 @@ int	ft_check_die(t_philo *philo)
 		pthread_mutex_unlock(&philo->philo_status);
 		return (SUCCESS);
 	}
-	pthread_mutex_unlock(&philo->philo_status);
 	pthread_mutex_unlock(&philo->philo_status);
 	return (ERROR);
 }
@@ -79,17 +78,17 @@ int	ft_check_end(t_data *table)
 	if (table->all_done_eating == table->num_philos)
 	{
 		pthread_mutex_unlock(&table->finished_mtx);
-		return (SUCCESS);
+		return (ERROR);
 	}
 	pthread_mutex_unlock(&table->finished_mtx);
 	pthread_mutex_lock(&table->simulation_done_mtx);
-	if (table->end_simulation == SUCCESS)
+	if (table->end_simulation == ERROR)
 	{
 		pthread_mutex_unlock(&table->simulation_done_mtx);
-		return (SUCCESS);
+		return (ERROR);
 	}
 	pthread_mutex_unlock(&table->simulation_done_mtx);
-	return (ERROR);
+	return (SUCCESS);
 }
 
 //Function to monitor the philosophers

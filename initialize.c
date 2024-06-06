@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/05 23:36:04 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/06 12:27:38 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ void	ft_init_philos(t_data *table)
 		table->philos[i].eat_count = 0;
 		table->philos[i].time_last_eat = 0;
 		table->philos[i].done_eating = 0;
-		ft_initialize_mutex(&table->philos[i].philo_status, table);
+		if (pthread_mutex_init(&table->philos[i].philo_status, NULL))
+			ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
 		i++;
 	}
 	ft_assign_forks(table->philos, table->forks, table->num_philos);
@@ -79,7 +80,8 @@ void	ft_init_forks(t_data *table)
 	while (i < table->num_philos)
 	{
 		forks[i].id = i + 1;
-		ft_initialize_mutex(&forks[i].fork, table);
+		if (pthread_mutex_init(&table->forks[i].fork, NULL))
+			ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
 		i++;
 	}
 }
@@ -97,12 +99,11 @@ int	ft_initialize_data(t_data *table, int argc , char **argv)
 	table->all_done_eating = 0;
 	table->all_philos_ready = 0;
 	table->ready_to_begin = 0;
-	table->counter = 0;
-	ft_initialize_mutex(&table->all_ready_mtx, table);
-	ft_initialize_mutex(&table->start_mtx, table);
-	ft_initialize_mutex(&table->finished_mtx, table);
-	ft_initialize_mutex(&table->print_mtx, table);
-	ft_initialize_mutex(&table->simulation_done_mtx, table);
+	ft_init_mtx_table(&table->all_ready_mtx, table);
+	ft_init_mtx_table(&table->start_mtx, table);
+	ft_init_mtx_table(&table->finished_mtx, table);
+	ft_init_mtx_table(&table->print_mtx, table);
+	ft_init_mtx_table(&table->simulation_done_mtx, table);
 	ft_allocate_memory(table);
 	ft_init_forks(table);
 	ft_init_philos(table);

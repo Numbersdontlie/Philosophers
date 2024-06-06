@@ -6,7 +6,7 @@
 /*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 11:27:03 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/05 18:29:08 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/06 11:58:29 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,5 @@ void	*ft_run_simulation(void *ptr)
 		ft_sleep(philo->data->time_to_sleep);
 		ft_put_msg(philo, YELLOW"is thinking"RESET);
 	}
-	return (NULL);
 	return (NULL);
 }
