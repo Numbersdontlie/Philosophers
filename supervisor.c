@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:23:31 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/11 18:17:08 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/11 18:56:40 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,28 @@ void	*ft_supervise(void *ptr)
 			i++;
 		}
 	}
+	return (NULL);
 }
 
+//Function to print a message
+//It locks the mutex to print the message and unlock it
+//It prints the message with the time, the philosopher id and the message
+//it also check the message content to act accordingly
+void	ft_put_msg(t_philo *philo, char *str)
+{
+	long	time;
+
+	pthread_mutex_lock(&philo->data->print_mtx);
+	time = ft_get_time() - philo->data->start_time;
+	if (ft_still_there(&philo->data->finished_mtx,
+			&philo->data->end_simulation) == FALSE)
+	{
+		if (ft_strncmp("is eating", str, 9) == 0)
+			printf(GREEN"%ld %d %s\n"RESET, time, philo->id, str);
+		else
+			printf("%ld %d %s\n", time, philo->id, str);
+	}
+	else if (ft_strncmp("died", str, 4) == 0)
+		printf(RED"%ld %d %s\n"RESET, time, philo->id, str);
+	pthread_mutex_unlock(&philo->data->print_mtx);
+}

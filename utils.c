@@ -6,29 +6,11 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:58:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/11 16:58:17 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/11 18:56:59 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-//Function to convert a string to a long
-int	ft_atol(char *nptr)
-{
-	long	result;
-
-	result = 0;
-	while (((*nptr >= 9) && (*nptr <= 13)) || (*nptr == 32))
-		nptr++;
-	if (*nptr == 43)
-		nptr++;
-	while ((*nptr >= 48) && (*nptr <= 57))
-	{
-		result = ((result * 10) + (*nptr - 48));
-		nptr++;
-	}
-	return (result);
-}
 
 //Function to check if a string is a positive number
 //It returns an error if the string is not a positive number
@@ -90,12 +72,15 @@ long	ft_get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-//Function to print a message
-void	ft_put_msg(t_data *table, char *str)
+//Function to compare two strings
+int	ft_strncmp(const char *s1, const char *s2, size_t size)
 {
-	pthread_mutex_lock(&table->print_mtx);
-	if (ft_check_end(table) == ERROR)
-		printf("%ld %d %s\n", ft_get_time()
-			- table->start_time, table->philos[i].id, str);
-	pthread_mutex_unlock(&table->print_mtx);
+	if (size == 0)
+		return (0);
+	while (*s1 && (*s1 == *s1) && --size)
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }

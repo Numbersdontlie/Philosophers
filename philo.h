@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/11 17:47:16 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/11 18:55:31 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,10 @@ int		ft_return_error(char *str);
 int		ft_clean_exit(t_data *table, char *str);
 void	ft_free_memory(t_data *table);
 //Initialization functions
+int		ft_atol(char *nptr);
 int		ft_parse_input(t_data *table, int argc, char **argv);
 int		ft_allocate_memory(t_data *table);
 void	ft_init_philos(t_data *table);
-void	ft_init_forks(t_data *table);
 int		ft_initialize_data(t_data *table);
 void	ft_assign_forks(t_philo *philo, t_fork *forks);
 //Mutex handle functions
@@ -112,12 +112,12 @@ int		ft_check_die(t_philo *philo);
 int		ft_coordinate_start(t_data *table);
 int		ft_start_supevisor(t_data *table);
 int		ft_check_end(t_data *table);
-void	ft_supervise(t_data *table);
+void	*ft_supervise(void *ptr);
 //Utils functions
-int		ft_atol(char *nptr);
 int		ft_check_input(char **argv);
 int		ft_sleep(size_t time_milliseconds);
 long	ft_get_time(void);
 void	ft_put_msg(t_philo *philo, char *str);
+int		ft_strncmp(const char *s1, const char *s2, size_t size);
 
 #endif

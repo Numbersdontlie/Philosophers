@@ -6,11 +6,29 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/11 17:46:32 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/11 18:49:36 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+//Function to convert a string to a long
+int	ft_atol(char *nptr)
+{
+	long	result;
+
+	result = 0;
+	while (((*nptr >= 9) && (*nptr <= 13)) || (*nptr == 32))
+		nptr++;
+	if (*nptr == 43)
+		nptr++;
+	while ((*nptr >= 48) && (*nptr <= 57))
+	{
+		result = ((result * 10) + (*nptr - 48));
+		nptr++;
+	}
+	return (result);
+}
 
 //Function to parse the input received from the user
 //It checks if the time to die, eat and sleep are at least 60ms
