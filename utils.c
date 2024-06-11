@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:58:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/05 15:40:16 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/11 16:58:17 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,11 @@ long	ft_get_time(void)
 }
 
 //Function to print a message
-void	ft_put_msg(t_philo *philo, char *str)
+void	ft_put_msg(t_data *table, char *str)
 {
-	pthread_mutex_lock(&philo->data->print_mtx);
-	if (ft_check_end(philo->data) == ERROR)
+	pthread_mutex_lock(&table->print_mtx);
+	if (ft_check_end(table) == ERROR)
 		printf("%ld %d %s\n", ft_get_time()
-			- philo->data->start_time, philo->id, str);
-	pthread_mutex_unlock(&philo->data->print_mtx);
+			- table->start_time, table->philos[i].id, str);
+	pthread_mutex_unlock(&table->print_mtx);
 }

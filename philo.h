@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/06 12:27:36 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/11 17:47:16 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,11 @@
 # define GREEN	"\033[0;32m"
 # define YELLOW	"\033[0;33m"
 # define RESET	"\033[0m"
-# define ERROR 10
-# define SUCCESS 20
+# define ERROR 1
+# define SUCCESS 0
 # define MAX_PHILOS 200
+# define TRUE 10
+# define FALSE 20
 
 //Structure to represent the fork with a mutex and an id
 typedef struct s_fork
@@ -53,7 +55,8 @@ typedef struct s_philo
 	t_fork			*first_fork;
 	t_fork			*second_fork;
 	struct s_data	*data;
-	pthread_mutex_t	philo_status;
+	pthread_mutex_t	philo_done_mtx;
+	pthread_mutex_t	philo_last_mtx;
 }	t_philo;
 
 //Structure to represent the data of the simulation, it includes:
@@ -63,44 +66,47 @@ typedef struct s_data
 {
 	int				num_philos;
 	int				num_times_to_eat;
-	int				all_done_eating;
 	int				all_philos_ready;
-	int				ready_to_begin;
 	int				end_simulation;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
+	long			time_to_think;
 	long			start_time;
+	pthread_t		philo_thread;
 	t_fork			*forks;
 	t_philo			*philos;
 	pthread_mutex_t	print_mtx;
-	pthread_mutex_t	start_mtx;
 	pthread_mutex_t	finished_mtx;
 	pthread_mutex_t	all_ready_mtx;
-	pthread_mutex_t	simulation_done_mtx;
 }	t_data;
 
 
 //Dinner functions
 void	ft_philo_eat(t_philo *philo);
-void	ft_single_philo(t_philo *philo);
+void	ft_thinking(t_philo *philo);
+void	*ft_dinner_routine(void *ptr);
 //Error handling functions
 int		ft_return_error(char *str);
 int		ft_clean_exit(t_data *table, char *str);
 void	ft_free_memory(t_data *table);
 //Initialization functions
 int		ft_parse_input(t_data *table, int argc, char **argv);
-void	ft_allocate_memory(t_data *table);
+int		ft_allocate_memory(t_data *table);
 void	ft_init_philos(t_data *table);
 void	ft_init_forks(t_data *table);
-int		ft_initialize_data(t_data *table, int argc, char **argv);
-void	ft_assign_forks(t_philo *philo, t_fork *forks, int num_philos);
+int		ft_initialize_data(t_data *table);
+void	ft_assign_forks(t_philo *philo, t_fork *forks);
 //Mutex handle functions
 void	ft_init_mtx_table(pthread_mutex_t *mtx, t_data *table);
 void	ft_destroy_mutex(t_data *table);
+void	ft_switch_mtx(pthread_mutex_t *mtx, int *value, int new_value);
+int		ft_still_there(pthread_mutex_t *mtx, int *value);
 //Simulation functions
-void	ft_start_simulation(t_data *table);
+int		ft_start_simulation(t_data *table);
 void	*ft_run_simulation(void *ptr);
+void	ft_print_meals(t_data *table);
+void	*ft_single_philo(void *ptr);
 //Supervisor functions
 int		ft_check_die(t_philo *philo);
 int		ft_coordinate_start(t_data *table);

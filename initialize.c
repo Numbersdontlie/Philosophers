@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/06 12:27:38 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/11 17:46:32 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	ft_parse_input(t_data *table, int argc, char **argv)
 }
 
 //Function to allocate memory for the philos, forks and mutexes
-void	ft_allocate_memory(t_data *table)
+int	ft_allocate_memory(t_data *table)
 {
 	table->philos = malloc(sizeof(t_philo) * table->num_philos);
 	if (!table->philos)
@@ -41,6 +41,7 @@ void	ft_allocate_memory(t_data *table)
 	table->forks = malloc(sizeof(t_fork) * table->num_philos);
 	if (!table->forks)
 		ft_clean_exit(table, RED"Error: Malloc failed fork\n"RESET);
+	return (SUCCESS);
 }
 
 //Function to initialize the philosophers in the table
@@ -58,82 +59,58 @@ void	ft_init_philos(t_data *table)
 		table->philos[i].data = table;
 		table->philos[i].id = i + 1;
 		table->philos[i].eat_count = 0;
-		table->philos[i].time_last_eat = 0;
-		table->philos[i].done_eating = 0;
-		if (pthread_mutex_init(&table->philos[i].philo_status, NULL))
+		table->philos[i].time_last_eat = ft_get_time();
+		table->philos[i].done_eating = FALSE;
+		if (pthread_mutex_init(&table->philos[i].philo_done_mtx, NULL))
+			ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
+		if (pthread_mutex_init(&table->philos[i].philo_last_mtx, NULL))
 			ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
 		i++;
+		ft_assign_forks(table->philos, table->forks);
 	}
-	ft_assign_forks(table->philos, table->forks, table->num_philos);
 }
 
-//Function to initialize the forks in the table
-//It assigns to each fork: the id and the mutex
-//It initializes the mutex of the fork
-void	ft_init_forks(t_data *table)
+//Function to assign the forks to the philosophers
+//odd philos start with left fork, even philos start with right fork
+void	ft_assign_forks(t_philo *philo, t_fork *fork)
 {
-	t_fork	*forks;
-	int	i;
-
-	i = 0;
-	forks = table->forks;
-	while (i < table->num_philos)
+	if (philo->id % 2 != 0)
 	{
-		forks[i].id = i + 1;
-		if (pthread_mutex_init(&table->forks[i].fork, NULL))
-			ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
-		i++;
+		philo->first_fork = &fork[philo->id % philo->data->num_philos];
+		philo->second_fork = &fork[philo->id - 1];
+	}
+	else
+	{
+		philo->first_fork = &fork[philo->id - 1];
+		philo->second_fork = &fork[philo->id % philo->data->num_philos];
 	}
 }
 
 //Function to initialize the values of the table
 //It allocates memory for the philos and forks and 
 //Initialize the philos and forks and assign the forks to the philos
-int	ft_initialize_data(t_data *table, int argc , char **argv)
-{
-	if (ft_parse_input(table, argc, argv) == ERROR)
-		ft_return_error("Error: Parsing input\n");
-	table->forks = NULL;
-	table->philos = NULL;
-	table->end_simulation = 0;
-	table->all_done_eating = 0;
-	table->all_philos_ready = 0;
-	table->ready_to_begin = 0;
-	ft_init_mtx_table(&table->all_ready_mtx, table);
-	ft_init_mtx_table(&table->start_mtx, table);
-	ft_init_mtx_table(&table->finished_mtx, table);
-	ft_init_mtx_table(&table->print_mtx, table);
-	ft_init_mtx_table(&table->simulation_done_mtx, table);
-	ft_allocate_memory(table);
-	ft_init_forks(table);
-	ft_init_philos(table);
-	table->start_time = ft_get_time();
-	return (SUCCESS);
-}
-
-//Function to assign the forks to the philosophers
-//odd philos start with left fork, even philos start with right fork
-void	ft_assign_forks(t_philo *philo, t_fork *fork, int num_philo)
+int	ft_initialize_data(t_data *table)
 {
 	int	i;
 
 	i = 0;
-	while (i < num_philo)
+	if (ft_allocate_memory(table) == ERROR)
+		return (ERROR);
+	while (i < table->num_philos)
 	{
-		if (philo[i].id % 2 != 0)
-		{
-			philo[i].first_fork = &fork[i];
-			if (i == 0)
-				philo[i].second_fork = &fork[num_philo - 1];
-			else
-				philo[i].second_fork = &fork[i - 1];
-			i++;
-		}
-		else
-		{
-			philo[i].first_fork = &fork[i - 1];
-			philo[i].second_fork = &fork[i];
-			i++;
-		}
+		if (pthread_mutex_init(&table->forks[i].fork, NULL))
+			ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
+		table->forks[i].id = i;
+		i++;
 	}
+	table->time_to_think = table->time_to_die - table->time_to_eat
+		- table->time_to_sleep;
+	table->end_simulation = FALSE;
+	table->all_philos_ready = FALSE;
+	ft_init_mtx_table(&table->all_ready_mtx, table);
+	ft_init_mtx_table(&table->finished_mtx, table);
+	ft_init_mtx_table(&table->print_mtx, table);
+	ft_init_philos(table);
+	table->start_time = ft_get_time();
+	return (SUCCESS);
 }

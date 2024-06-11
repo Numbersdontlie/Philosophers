@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:46:00 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/05 23:36:38 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/11 17:46:35 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,15 @@ int	main(int argc, char **argv)
 	{
 		table = (t_data *)malloc(sizeof(t_data));
 		if (!table)
-			return (ERROR);
+			return (1);
 		if (ft_check_input(argv) == ERROR)
-			printf(RED"Error: not numeric values"RESET);
+			return (ft_return_error(RED"Error: not numeric values"RESET));
 		if (ft_parse_input(table, argc, argv) == ERROR)
 			return (ft_return_error(RED"Error: Invalid input to simulation"RESET));
-		if (ft_initialize_data(table, argc, argv) == ERROR)
+		if (ft_initialize_data(table) == ERROR)
 			return (ft_return_error(RED"Error: Initialization failed"RESET));
-		if (table->num_philos == 1)
-			ft_single_philo(table->philos);
-		else
-			ft_start_simulation(table);
-		printf(YELLOW"Simulation finished\n"RESET);
+		ft_start_simulation(table);
+		ft_print_meals(table);
 		ft_destroy_mutex(table);
 		ft_free_memory(table);
 	}
