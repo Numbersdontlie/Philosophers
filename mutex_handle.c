@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mutex_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:09:56 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/11 17:46:28 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:01:05 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,11 @@ int	ft_still_there(pthread_mutex_t *mtx, int *value)
 	ret = *value;
 	pthread_mutex_unlock(mtx);
 	return (ret);
+}
+
+void	ft_get_last_eat(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->philo_last_mtx);
+	philo->time_last_eat = ft_get_time();
+	pthread_mutex_unlock(&philo->philo_last_mtx);
 }

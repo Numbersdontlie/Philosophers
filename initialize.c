@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/11 18:49:36 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:46:31 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+static int	ft_atol(char *nptr);
+
 //Function to convert a string to a long
-int	ft_atol(char *nptr)
+static int	ft_atol(char *nptr)
 {
 	long	result;
 
@@ -45,7 +47,7 @@ int	ft_parse_input(t_data *table, int argc, char **argv)
 	else
 		table->num_times_to_eat = -1;
 	if (table->time_to_die < 60 || table->time_to_eat < 60
-		|| table->time_to_sleep < 60)
+			|| table->time_to_sleep < 60)
 		return (ft_return_error("ERROR: time in ms, min 60"));
 	return (SUCCESS);
 }
@@ -78,7 +80,7 @@ void	ft_init_philos(t_data *table)
 		table->philos[i].id = i + 1;
 		table->philos[i].eat_count = 0;
 		table->philos[i].time_last_eat = ft_get_time();
-		table->philos[i].done_eating = FALSE;
+		table->philos[i].done_eating = NO;
 		if (pthread_mutex_init(&table->philos[i].philo_done_mtx, NULL))
 			ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
 		if (pthread_mutex_init(&table->philos[i].philo_last_mtx, NULL))
@@ -123,8 +125,8 @@ int	ft_initialize_data(t_data *table)
 	}
 	table->time_to_think = table->time_to_die - table->time_to_eat
 		- table->time_to_sleep;
-	table->end_simulation = FALSE;
-	table->all_philos_ready = FALSE;
+	table->end_simulation = NO;
+	table->all_philos_ready = NO;
 	ft_init_mtx_table(&table->all_ready_mtx, table);
 	ft_init_mtx_table(&table->finished_mtx, table);
 	ft_init_mtx_table(&table->print_mtx, table);

@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 11:27:03 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/11 18:56:27 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:01:14 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static int	ft_create_single_philo(t_data *table);
+static int	ft_create_philos(t_data *table);
+static int	ft_create_supervisor(t_data *table);
 
 //Function to start the simulation
 //It creates the threads for the philosophers and check for possible errors
@@ -20,35 +24,55 @@ int	ft_start_simulation(t_data *table)
 {
 	int	i;
 
-	i = 0;
 	if (table->num_philos == 1)
-	{
-		if (pthread_create(&table->philos[0].thread_id, NULL,
-				ft_single_philo, &table->philos[0]))
-			ft_return_error(RED"Error creating philosopher thread"RESET);
-	}
+		ft_create_single_philo(table);
 	else
-	{
-		while (i < table->num_philos)
-		{
-			if (pthread_create(&table->philos[i].thread_id, NULL,
-					ft_dinner_routine, &table->philos[i]))
-				ft_return_error(RED"Error creating philosopher thread"RESET);
-			i++;
-		}
-	}
-	if (pthread_create(&table->philo_thread, NULL,
-			ft_supervise, table))
-		ft_return_error(RED"Error creating supervisor thread"RESET);
-	ft_switch_mtx(&table->all_ready_mtx, &table->all_philos_ready, TRUE);
+		ft_create_philos(table);
+	ft_create_supervisor(table);
+	ft_switch_mtx(&table->all_ready_mtx, &table->all_philos_ready, SI);
 	i = 0;
 	while (i < table->num_philos)
 	{
 		pthread_join(table->philos[i].thread_id, NULL);
 		i++;
 	}
-	ft_switch_mtx(&table->finished_mtx, &table->end_simulation, TRUE);
+	ft_switch_mtx(&table->finished_mtx, &table->end_simulation, SI);
 	pthread_join(table->philo_thread, NULL);
+	return (SUCCESS);
+}
+
+//Function to create a single philosopher
+//it will create the thread for the philosopher and check for possible errors
+static int	ft_create_single_philo(t_data *table)
+{
+	if (pthread_create(&table->philos[0].thread_id, NULL,
+				ft_single_philo, &table->philos[0]))
+			ft_return_error(RED"Error creating philosopher thread"RESET);
+	return (SUCCESS);
+}
+
+//Function to create the threads for the philosophers
+static int	ft_create_philos(t_data *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->num_philos)
+	{
+		if (pthread_create(&table->philos[i].thread_id, NULL,
+				ft_dinner_routine, &table->philos[i]))
+			ft_return_error(RED"Error creating philosopher thread"RESET);
+		i++;
+	}
+	return (SUCCESS);
+}
+
+//Function to create the supervisor thread
+static int	ft_create_supervisor(t_data *table)
+{
+	if (pthread_create(&table->philo_thread, NULL,
+			ft_supervise, table))
+		ft_return_error(RED"Error creating supervisor thread"RESET);
 	return (SUCCESS);
 }
 
@@ -70,7 +94,7 @@ void	*ft_single_philo(void *ptr)
 
 //Function to print the amount of meals
 //each philosopher has eaten
-void	ft_print_meals(t_data *table)
+void	ft_put_meals(t_data *table)
 {
 	int	i;
 
@@ -79,9 +103,8 @@ void	ft_print_meals(t_data *table)
 	while (i < table->num_philos)
 	{
 		printf(GREEN"%d has %d meals eaten\n"RESET,
-			table->philos[i].eat_count, table->philos[i].eat_count);
+			table->philos[i].id, table->philos[i].eat_count);
 		i++;
 	}
 	pthread_mutex_unlock(&table->print_mtx);
 }
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dinner.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 11:16:11 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/11 18:56:15 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/12 12:14:47 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_philo_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->first_fork->fork);
 	ft_put_msg(philo, GREEN"has taken a fork"RESET);
 	if (ft_still_there(&philo->data->finished_mtx,
-			&philo->data->end_simulation) == TRUE)
+			&philo->data->end_simulation) == SI)
 		return ;
 	pthread_mutex_lock(&philo->second_fork->fork);
 	ft_put_msg(philo, GREEN"has taken a fork"RESET);
@@ -34,7 +34,7 @@ void	ft_philo_eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->second_fork->fork);
 	philo->eat_count++;
 	if (philo->eat_count == philo->data->num_times_to_eat)
-		ft_switch_mtx(&philo->philo_done_mtx, &philo->done_eating, TRUE);
+		ft_switch_mtx(&philo->philo_done_mtx, &philo->done_eating, SI);
 }
 
 //Function to make a philosopher to think
@@ -44,7 +44,7 @@ void	ft_thinking(t_philo *philo)
 {
 	ft_put_msg(philo, YELLOW"is thinking"RESET);
 	if (ft_still_there(&philo->data->finished_mtx,
-			&philo->data->end_simulation) == FALSE)
+			&philo->data->end_simulation) == NO)
 	{
 		if (philo->data->time_to_think > 5)
 			ft_sleep(philo->data->time_to_think * 0.8);
@@ -61,17 +61,17 @@ void	*ft_dinner_routine(void *ptr)
 
 	philo = (t_philo *)ptr;
 	while (ft_still_there(&philo->data->all_ready_mtx,
-			&philo->data->all_philos_ready) == FALSE)
+			&philo->data->all_philos_ready) == NO)
 		usleep(100);
 	if (philo->id % 2 == 1)
 		usleep(1);
-	while (ft_still_there(&philo->data->finished_mtx, &philo->data->end_simulation) == FALSE)
+	while (ft_still_there(&philo->data->finished_mtx, &philo->data->end_simulation) == NO)
 	{
 		ft_philo_eat(philo);
 		ft_put_msg(philo, GREEN"is sleeping"RESET);
-		if (ft_still_there(&philo->philo_done_mtx, &philo->done_eating) == TRUE)
+		if (ft_still_there(&philo->philo_done_mtx, &philo->done_eating) == SI)
 			return (NULL);
-		if (ft_still_there(&philo->data->finished_mtx, &philo->data->end_simulation) == FALSE)
+		if (ft_still_there(&philo->data->finished_mtx, &philo->data->end_simulation) == NO)
 			ft_sleep(philo->data->time_to_sleep);
 		ft_thinking(philo);
 	}

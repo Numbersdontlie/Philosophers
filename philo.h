@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/11 18:55:31 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:00:54 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,13 @@
 # define GREEN	"\033[0;32m"
 # define YELLOW	"\033[0;33m"
 # define RESET	"\033[0m"
-# define RED	"\033[0;31m"
-# define GREEN	"\033[0;32m"
-# define YELLOW	"\033[0;33m"
-# define RESET	"\033[0m"
 # define ERROR 1
 # define SUCCESS 0
 # define MAX_PHILOS 200
-# define TRUE 10
-# define FALSE 20
+# define SI 10
+# define NO 20
+
+typedef struct s_data	t_data;
 
 //Structure to represent the fork with a mutex and an id
 typedef struct s_fork
@@ -91,7 +89,6 @@ int		ft_return_error(char *str);
 int		ft_clean_exit(t_data *table, char *str);
 void	ft_free_memory(t_data *table);
 //Initialization functions
-int		ft_atol(char *nptr);
 int		ft_parse_input(t_data *table, int argc, char **argv);
 int		ft_allocate_memory(t_data *table);
 void	ft_init_philos(t_data *table);
@@ -105,7 +102,7 @@ int		ft_still_there(pthread_mutex_t *mtx, int *value);
 //Simulation functions
 int		ft_start_simulation(t_data *table);
 void	*ft_run_simulation(void *ptr);
-void	ft_print_meals(t_data *table);
+void	ft_put_meals(t_data *table);
 void	*ft_single_philo(void *ptr);
 //Supervisor functions
 int		ft_check_die(t_philo *philo);
