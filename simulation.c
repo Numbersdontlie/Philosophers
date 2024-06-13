@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 11:27:03 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/13 19:04:33 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/13 20:59:33 by luifer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static int	ft_create_single_philo(t_data *table)
 	if (pthread_create(&table->philos[0].thread_id, NULL,
 			ft_single_philo, &table->philos[0]))
 		ft_return_error(RED"Error creating philosopher thread"RESET);
+	ft_sleep(100);
 	return (SUCCESS);
 }
 
