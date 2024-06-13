@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:46:00 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/12 17:01:56 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/13 19:07:16 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ int	main(int argc, char **argv)
 			return (ft_return_error(RED"Error: Invalid input to simulation"RESET));
 		if (ft_initialize_data(table) == ERROR)
 			return (ft_return_error(RED"Error: Initialization failed"RESET));
-		ft_start_simulation(table);
+		if (table->num_philos == 1)
+			ft_start_simulation_single(table);
+		else
+			ft_start_simulation(table);
 		ft_put_meals(table);
 		ft_destroy_mutex(table);
 		ft_free_memory(table);

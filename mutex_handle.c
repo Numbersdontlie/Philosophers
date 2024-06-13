@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:09:56 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/13 12:58:50 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/13 19:01:50 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,21 @@ void	ft_get_last_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->philo_last_mtx);
 	philo->time_last_eat = ft_get_time();
 	pthread_mutex_unlock(&philo->philo_last_mtx);
+}
+
+//Function to print the amount of meals
+//each philosopher has eaten
+void	ft_put_meals(t_data *table)
+{
+	int	i;
+
+	i = 0;
+	pthread_mutex_lock(&table->print_mtx);
+	while (i < table->num_philos)
+	{
+		printf(GREEN"%d has %d meals eaten\n"RESET,
+			table->philos[i].id, table->philos[i].eat_count);
+		i++;
+	}
+	pthread_mutex_unlock(&table->print_mtx);
 }

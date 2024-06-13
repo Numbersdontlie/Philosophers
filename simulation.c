@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 11:27:03 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/13 17:59:36 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/13 19:04:33 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,13 @@ static int	ft_create_philos(t_data *table);
 static int	ft_create_supervisor(t_data *table);
 static void	*ft_single_philo(void *ptr);
 
+//Function to start the simulation with just one philosopher
+int	ft_start_simulation_single(t_data *table)
+{
+	ft_create_single_philo(table);
+	return (SUCCESS);
+}
+
 //Function to start the simulation
 //It creates the threads for the philosophers and check for possible errors
 //It joins the threads and check for possible errors
@@ -25,10 +32,7 @@ int	ft_start_simulation(t_data *table)
 {
 	int	i;
 
-	if (table->num_philos == 1)
-		ft_create_single_philo(table);
-	else
-		ft_create_philos(table);
+	ft_create_philos(table);
 	ft_create_supervisor(table);
 	ft_switch_mtx(&table->all_ready_mtx, &table->all_philos_ready, SI);
 	i = 0;
@@ -93,19 +97,4 @@ static void	*ft_single_philo(void *ptr)
 	return (NULL);
 }
 
-//Function to print the amount of meals
-//each philosopher has eaten
-void	ft_put_meals(t_data *table)
-{
-	int	i;
 
-	i = 0;
-	pthread_mutex_lock(&table->print_mtx);
-	while (i < table->num_philos)
-	{
-		printf(GREEN"%d has %d meals eaten\n"RESET,
-			table->philos[i].id, table->philos[i].eat_count);
-		i++;
-	}
-	pthread_mutex_unlock(&table->print_mtx);
-}
