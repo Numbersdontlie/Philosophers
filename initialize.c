@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/12 16:46:31 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/13 12:57:39 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,10 @@ void	ft_init_philos(t_data *table)
 		table->philos[i].eat_count = 0;
 		table->philos[i].time_last_eat = ft_get_time();
 		table->philos[i].done_eating = NO;
-		if (pthread_mutex_init(&table->philos[i].philo_done_mtx, NULL))
-			ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
-		if (pthread_mutex_init(&table->philos[i].philo_last_mtx, NULL))
-			ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
+		pthread_mutex_init(&table->philos[i].philo_done_mtx, NULL);
+		pthread_mutex_init(&table->philos[i].philo_last_mtx, NULL);
+		ft_assign_forks(&table->philos[i], table->forks);
 		i++;
-		ft_assign_forks(table->philos, table->forks);
 	}
 }
 
@@ -118,8 +116,7 @@ int	ft_initialize_data(t_data *table)
 		return (ERROR);
 	while (i < table->num_philos)
 	{
-		if (pthread_mutex_init(&table->forks[i].fork, NULL))
-			ft_clean_exit(table, RED"Error: Mutex init failed\n"RESET);
+		pthread_mutex_init(&table->forks[i].fork, NULL);
 		table->forks[i].id = i;
 		i++;
 	}
