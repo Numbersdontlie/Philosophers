@@ -11,8 +11,8 @@ OBJS = ${SRCS:.c=.o}
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -g 
-#-fsanitize=thread -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+#-fsanitize=thread 
 #LIB = philo.h
 
 all: ${NAME}

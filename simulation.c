@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 11:27:03 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/13 12:33:32 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/13 17:59:36 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static int	ft_create_single_philo(t_data *table);
 static int	ft_create_philos(t_data *table);
 static int	ft_create_supervisor(t_data *table);
+static void	*ft_single_philo(void *ptr);
 
 //Function to start the simulation
 //It creates the threads for the philosophers and check for possible errors
@@ -79,7 +80,7 @@ static int	ft_create_supervisor(t_data *table)
 //Function to recreate the simulation
 //with just one philosopher, it will set the starting point 
 //will grab a fork and sleep until it dies. it will also clean the memory
-void	*ft_single_philo(void *ptr)
+static void	*ft_single_philo(void *ptr)
 {
 	t_philo	*philo;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/12 17:00:54 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/13 17:59:33 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ int		ft_still_there(pthread_mutex_t *mtx, int *value);
 int		ft_start_simulation(t_data *table);
 void	*ft_run_simulation(void *ptr);
 void	ft_put_meals(t_data *table);
-void	*ft_single_philo(void *ptr);
 //Supervisor functions
 int		ft_check_die(t_philo *philo);
 int		ft_coordinate_start(t_data *table);
