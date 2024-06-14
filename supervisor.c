@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   supervisor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:23:31 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/12 12:15:19 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/14 12:40:59 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ int	ft_check_die(t_philo *philo)
 	pthread_mutex_unlock(&philo->philo_last_mtx);
 	return (NO);
 }
-
 
 //Function to monitor the philosophers
 //It checks if a philosopher has died and if so it ends the simulation

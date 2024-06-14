@@ -6,7 +6,7 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 11:25:27 by lperez-h          #+#    #+#             */
-/*   Updated: 2024/06/13 19:04:46 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/14 12:40:54 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ typedef struct s_data
 	pthread_mutex_t	finished_mtx;
 	pthread_mutex_t	all_ready_mtx;
 }	t_data;
-
 
 //Dinner functions
 void	ft_philo_eat(t_philo *philo);

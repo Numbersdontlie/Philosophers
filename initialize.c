@@ -6,51 +6,11 @@
 /*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 22:57:56 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/13 12:57:39 by lperez-h         ###   ########.fr       */
+/*   Updated: 2024/06/14 12:43:54 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-static int	ft_atol(char *nptr);
-
-//Function to convert a string to a long
-static int	ft_atol(char *nptr)
-{
-	long	result;
-
-	result = 0;
-	while (((*nptr >= 9) && (*nptr <= 13)) || (*nptr == 32))
-		nptr++;
-	if (*nptr == 43)
-		nptr++;
-	while ((*nptr >= 48) && (*nptr <= 57))
-	{
-		result = ((result * 10) + (*nptr - 48));
-		nptr++;
-	}
-	return (result);
-}
-
-//Function to parse the input received from the user
-//It checks if the time to die, eat and sleep are at least 60ms
-//It populates the data structure with the input
-//It also initializes the mutexes of the table
-int	ft_parse_input(t_data *table, int argc, char **argv)
-{
-	table->num_philos = ft_atol(argv[1]);
-	table->time_to_die = ft_atol(argv[2]);
-	table->time_to_eat = ft_atol(argv[3]);
-	table->time_to_sleep = ft_atol(argv[4]);
-	if (argc == 6)
-		table->num_times_to_eat = ft_atol(argv[5]);
-	else
-		table->num_times_to_eat = -1;
-	if (table->time_to_die < 60 || table->time_to_eat < 60
-			|| table->time_to_sleep < 60)
-		return (ft_return_error("ERROR: time in ms, min 60"));
-	return (SUCCESS);
-}
 
 //Function to allocate memory for the philos, forks and mutexes
 int	ft_allocate_memory(t_data *table)

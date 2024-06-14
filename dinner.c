@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dinner.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luifer <luifer@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lperez-h <lperez-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 11:16:11 by luifer            #+#    #+#             */
-/*   Updated: 2024/06/12 12:14:47 by luifer           ###   ########.fr       */
+/*   Updated: 2024/06/14 12:26:19 by lperez-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,15 @@ void	*ft_dinner_routine(void *ptr)
 		usleep(100);
 	if (philo->id % 2 == 1)
 		usleep(1);
-	while (ft_still_there(&philo->data->finished_mtx, &philo->data->end_simulation) == NO)
+	while (ft_still_there(&philo->data->finished_mtx,
+			&philo->data->end_simulation) == NO)
 	{
 		ft_philo_eat(philo);
 		ft_put_msg(philo, GREEN"is sleeping"RESET);
 		if (ft_still_there(&philo->philo_done_mtx, &philo->done_eating) == SI)
 			return (NULL);
-		if (ft_still_there(&philo->data->finished_mtx, &philo->data->end_simulation) == NO)
+		if (ft_still_there(&philo->data->finished_mtx,
+				&philo->data->end_simulation) == NO)
 			ft_sleep(philo->data->time_to_sleep);
 		ft_thinking(philo);
 	}
